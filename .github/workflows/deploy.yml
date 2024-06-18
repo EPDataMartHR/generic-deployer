@@ -25,7 +25,7 @@ jobs:
         aws-region: us-east-1
 
     - name: Run deploy script
-      run: ./deploy.sh ${{ github.event.inputs.stack_name }} ${{ github.event.inputs.template_file }} ${{ github.event.inputs.environment }}
+      run: ./deployer.sh ${{ github.event.inputs.stack_name }} ${{ github.event.inputs.template_file }} ${{ github.event.inputs.environment }}
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
