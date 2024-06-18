@@ -18,6 +18,6 @@ sam deploy \
     --stack-name "${STACK_NAME}" \
     --s3-bucket "cep-${ENVIRONMENT}-eyp-hr-sam-deployments" \
     --s3-prefix "${STACK_NAME}" \
-    --capabilities CAPABILITY_IAM \
+    --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
     --region "${AWS_REGION}" \
     --tags "global:project=DL-HR" "global:bu=HR"
