@@ -11,6 +11,9 @@ ENVIRONMENT=$4
 # Build SAM application
 sam build --use-container --template-file ${TEMPLATE_FILE}
 
+echo $STACK_NAME
+echo $ENVIRONMENT
+
 # Deploy SAM application
 sam deploy --template-file .aws-sam/build/template.yaml \
             --stack-name ${STACK_NAME} \
