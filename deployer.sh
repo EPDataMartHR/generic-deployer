@@ -12,8 +12,12 @@ ENVIRONMENT=$3
 sam build --use-container --template-file ${TEMPLATE_FILE}
 
 # Deploy SAM application
-sam deploy --template-file .aws-sam/build/template.yaml \
-            --stack-name "${STACK_NAME}" \
-            --capabilities CAPABILITY_IAM \
-            --parameter-overrides "Environment=${ENVIRONMENT}" \
-            --region "$AWS_REGION"
+sam deploy \
+    --no-confirm-changeset \
+    --no-fail-on-empty-changeset \
+    --stack-name "${STACK_NAME}" \
+    --s3-bucket "cep-${ENVIRONMENT}-eyp-hr-deployments" \
+    --s3-prefix "${STACK_NAME}" \
+    --capabilities CAPABILITY_IAM \
+    --region "${AWS_REGION}" \
+    --tags "global:project=DL-HR" "global:bu=HR"
