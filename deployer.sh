@@ -6,7 +6,7 @@ set -e
 # Parameters
 STACK_NAME=$1
 TEMPLATE_FILE=$2
-ENVIRONMENT=$4
+ENVIRONMENT=$3
 
 # Build SAM application
 sam build --use-container --template-file ${TEMPLATE_FILE}
