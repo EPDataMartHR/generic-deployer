@@ -19,3 +19,4 @@ sam deploy --template-file .aws-sam/build/template.yaml \
             --stack-name ${STACK_NAME} \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides Environment=${ENVIRONMENT}
+            --region $AWS_REGION
