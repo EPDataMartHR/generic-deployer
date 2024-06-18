@@ -16,7 +16,7 @@ sam deploy \
     --no-confirm-changeset \
     --no-fail-on-empty-changeset \
     --stack-name "${STACK_NAME}" \
-    --s3-bucket "cep-${ENVIRONMENT}-eyp-hr-deployments" \
+    --s3-bucket "cep-${ENVIRONMENT}-eyp-hr-sam-deployments" \
     --s3-prefix "${STACK_NAME}" \
     --capabilities CAPABILITY_IAM \
     --region "${AWS_REGION}" \
