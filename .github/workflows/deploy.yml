@@ -48,7 +48,7 @@ jobs:
         role-session-name: GitHubActions-Development
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Run deploy script
+    - name: Run AWS SAM applications
       run: |
         # Build SAM application
         sam build --use-container --template-file ${{ github.event.client_payload.sam_template_file }}
