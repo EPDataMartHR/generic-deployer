@@ -22,7 +22,13 @@ jobs:
 
     - uses: aws-actions/setup-sam@v2
 
-    - run: echo "${{ github.event.client_payload.environment }}"
+    - name: Verify Environment
+      run: |
+        if [[ "${{ github.event.client_payload.environment }}" == "pro" ]]; then
+          echo "This is the production environment";
+        else
+          echo "This is the development environment";
+        fi
     
     - name: Configure AWS credentials for production
       if: ${{ github.event.client_payload.environment }} == 'pro'
