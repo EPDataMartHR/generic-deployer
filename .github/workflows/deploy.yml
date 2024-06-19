@@ -50,6 +50,7 @@ jobs:
 
     - name: Run AWS SAM applications
       run: |
+        echo "Current directory: $(pwd)"
         # Build SAM application
         sam build --use-container --template-file ${{ github.event.client_payload.sam_template_file }}
 
