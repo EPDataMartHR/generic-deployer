@@ -18,17 +18,11 @@ jobs:
       with:
         repository: EPDataMartHR/generic-deployer
         path: generic-deployer
-        
-    - name: Determine triggering repository name
-      id: determine-repo-name
-      run: |
-        echo "Triggered by ${{ github.event.client_payload.repository.full_name }}"
-        echo "::set-output name=repo_name::${{ github.event.client_payload.repository.full_name }}"
       
     - name: Checkout triggering repository
       uses: actions/checkout@v2
       with:
-        repository: ${{ steps.determine-repo-name.outputs.repo_name }}
+        repository: ${{ github.event.client_payload.repository }}
         ref: ${{ github.event.client_payload.ref }}
         token: ${{ secrets.REPO_DISPATCH_TOKEN }}
         
