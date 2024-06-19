@@ -1,4 +1,4 @@
-name: Deploy Glue Catalog with Generic Deployer
+name: Deploy with Generic Deployer
 
 on:
   repository_dispatch:
@@ -21,17 +21,9 @@ jobs:
         python-version: '3.12'
 
     - uses: aws-actions/setup-sam@v2
-
-    - name: Verify Environment
-      run: |
-        if [[ "${{ github.event.client_payload.environment }}" == "pro" ]]; then
-          echo "This is the production environment";
-        else
-          echo "This is the development environment";
-        fi
     
     - name: Configure AWS credentials for production
-      if: ${{ github.event.client_payload.environment }} == 'pro'
+      if: ${{ github.event.client_payload.environment == "pro" }}
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }} -- Sustituir por el nombre del Role
@@ -40,7 +32,7 @@ jobs:
         role-duration-seconds: 3600
         audience: sts.amazonaws.com
     - name: Configure AWS credentials for development
-      if: ${{ github.event.client_payload.environment }} == 'dev'
+      if: ${{ github.event.client_payload.environment == "dev" }}
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }}
