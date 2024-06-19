@@ -12,13 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout generic deployer
-      uses: actions/checkout@v2
-      with:
-        repository: EPDataMartHR/generic-deployer
-        path: generic-deployer
-      
+    steps:      
     - name: Checkout triggering repository
       uses: actions/checkout@v2
       with:
@@ -26,16 +20,13 @@ jobs:
         ref: ${{ github.event.client_payload.ref }}
         token: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
-    - name: Current directory REC
-      run: |
-        ls -alR
-        
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
 
-    - uses: aws-actions/setup-sam@v2
+    - name: Set up AWS SAM
+      uses: aws-actions/setup-sam@v2
     
     - name: Configure AWS credentials for production
       if: ${{ github.event.client_payload.environment == 'pro' }}
