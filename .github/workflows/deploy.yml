@@ -50,6 +50,16 @@ jobs:
 
     - name: Run deploy script
       run: |
-        cd generic-deployer
-        chmod +x deployer.sh
-        AWS_REGION=${{ github.event.client_payload.region }} ./deployer.sh ${{ github.event.client_payload.stack_name }} ../cf-glue-catalog/template.yml "${{ github.event.client_payload.environment }}"
+        # Build SAM application
+        sam build --use-container --template-file ${{ github.event.client_payload.repository }}/template.yml
+
+        # Deploy SAM application
+        sam deploy \
+          --no-confirm-changeset \
+          --no-fail-on-empty-changeset \
+          --stack-name ${{ github.event.client_payload.stack_name }} \
+          --s3-bucket "cep-${{ github.event.client_payload.environment }}-eyp-hr-sam-deployments" \
+          --s3-prefix "${{ github.event.client_payload.stack_name }}" \
+          --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+          --region "${{ secrets.AWS_REGION }}" \
+          --tags "global:project=DL-HR" "global:bu=HR"
