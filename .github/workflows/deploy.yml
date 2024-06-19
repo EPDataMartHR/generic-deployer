@@ -15,17 +15,14 @@ jobs:
         repository: EPDataMartHR/generic-deployer
         path: generic-deployer
         
-    - name: Checkout project code
-      uses: actions/checkout@v2
-      with:
-        path: ${{ github.repository }}
-        
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
 
     - uses: aws-actions/setup-sam@v2
+
+    - uses: echo "${{ github.event.client_payload.environment }}"
     
     - name: Configure AWS credentials for production
       if: ${{ github.event.client_payload.environment }} == "pro"
