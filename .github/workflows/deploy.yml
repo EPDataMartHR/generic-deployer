@@ -25,6 +25,10 @@ jobs:
         repository: ${{ github.event.client_payload.repository }}
         ref: ${{ github.event.client_payload.ref }}
         token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
+    - name: Current directory REC
+      run: |
+        ls -alR
         
     - name: Set up Python
       uses: actions/setup-python@v2
