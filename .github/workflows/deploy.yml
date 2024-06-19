@@ -1,32 +1,53 @@
-name: Generic Deploy
+name: Deploy Glue Catalog with Generic Deployer
 
-on: [workflow_dispatch]
+on:
+  repository_dispatch:
+    types: [deploy]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout generic deployer
       uses: actions/checkout@v2
-
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      
-    - name: Setup SAM
-      uses: aws-actions/setup-sam@v1
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-        aws-region: us-east-1
+        repository: EPDataMartHR/generic-deployer
+        path: generic-deployer
+        
+    - name: Checkout project code
+      uses: actions/checkout@v2
+      with:
+        path: ${{ github.repository }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - uses: aws-actions/setup-sam@v2
+    
+    - name: Configure AWS credentials for production
+      if: ${{ github.event.client_payload.environment }} == "pro"
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }} -- Sustituir por el nombre del Role
+        role-session-name: GitHubActions-Production
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-duration-seconds: 3600
+        audience: sts.amazonaws.com
+    - name: Configure AWS credentials for development
+      if: ${{ github.event.client_payload.environment }} == "dev"
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }}
+        role-session-name: GitHubActions-Development
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-duration-seconds: 3600
+        audience: sts.amazonaws.com
 
     - name: Run deploy script
-      run: ./deployer.sh ${{ github.event.inputs.stack_name }} ${{ github.event.inputs.template_file }} ${{ github.event.inputs.environment }}
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      run: |
+        cd generic-deployer
+        chmod +x deployer.sh
+        AWS_REGION=${{ github.event.client_payload.region }} ./deployer.sh ${{ github.event.client_payload.stack_name }} ../cf-glue-catalog/template.yml "${{ github.event.client_payload.environment }}"
