@@ -51,7 +51,7 @@ jobs:
     - name: Run deploy script
       run: |
         # Build SAM application
-        sam build --use-container --template-file ${{ github.event.client_payload.repository }}/template.yml
+        sam build --use-container --template-file ${{ github.event.client_payload.sam_template_file }}
 
         # Deploy SAM application
         sam deploy \
