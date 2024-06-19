@@ -3,7 +3,7 @@ name: Deploy Glue Catalog with Generic Deployer
 on:
   repository_dispatch:
     types: [deploy]
-
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
