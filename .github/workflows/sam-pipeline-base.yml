@@ -1,0 +1,46 @@
+name: Deploy <Service>
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - PRO
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Determine environment
+      id: determine-env
+      run: |
+        if [[ "${{ github.ref }}" == "refs/tags/PRO" ]]; then
+          echo "environment=pro" >> $GITHUB_ENV
+        elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+          echo "environment=dev" >> $GITHUB_ENV
+        else
+          echo "Unknown event or branch, exiting."
+          exit 1
+        fi
+  
+    - name: Trigger Deploy <Service> in <repository> repository
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        repository: EPDataMartHR/generic-deployer
+        token: ${{ secrets.REPO_DISPATCH_TOKEN }}  # Necesitas un token con permisos para hacer dispatch al otro repositorio
+        event-type: deploy
+        client-payload: |
+          {
+            "environment": "${{ env.environment }}",
+            "stack_name": "eyp-${{ env.environment }}-sam-<servicio>-<nombre>",
+            "region": "eu-west-1",
+            "repository": "${{ github.repository }}",
+            "ref": "${{ github.ref }}",
+            "path": "${{ github.path }}",
+            "sam_template_file": "template.yaml"
+          }

@@ -14,16 +14,16 @@ jobs:
 
     steps:      
     - name: Checkout triggering repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: ${{ github.event.client_payload.repository }}
         ref: ${{ github.event.client_payload.ref }}
         token: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.12'
+        python-version: '3.11'
 
     - name: Set up AWS SAM
       uses: aws-actions/setup-sam@v2
@@ -32,7 +32,7 @@ jobs:
       if: ${{ github.event.client_payload.environment == 'pro' }}
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }} -- Sustituir por el nombre del Role
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }}
         role-session-name: GitHubActions-Production
         aws-region: ${{ secrets.AWS_REGION }}
     - name: Configure AWS credentials for development
@@ -54,7 +54,7 @@ jobs:
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
           --stack-name ${{ github.event.client_payload.stack_name }} \
-          --s3-bucket "cep-${{ github.event.client_payload.environment }}-eyp-hr-sam-deployments" \
+          --s3-bucket "cep-${{ github.event.client_payload.environment }}-sam-deployments"
           --s3-prefix "${{ github.event.client_payload.stack_name }}" \
           --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
           --region "${{ secrets.AWS_REGION }}" \
