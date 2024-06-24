@@ -54,7 +54,7 @@ jobs:
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
           --stack-name ${{ github.event.client_payload.stack_name }} \
-          --s3-bucket "cep-${{ github.event.client_payload.environment }}-sam-deployments"
+          --s3-bucket "cep-${{ github.event.client_payload.environment }}-eyp-hr-sam-deployments"
           --s3-prefix "${{ github.event.client_payload.stack_name }}" \
           --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
           --region "${{ secrets.AWS_REGION }}" \
