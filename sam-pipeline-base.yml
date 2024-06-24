@@ -1,13 +1,13 @@
 name: Deploy <Service>
 
 # Descomentar estas líneas al copiarlo a un nuevo proyecto. Comentadas aquí para evitar trigger de este yaml
-# on:
-#   push:
-#     branches:
-#       - main
-#     tags:
-#       - PRO
-#   workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - PRO
+  workflow_dispatch:
 
 jobs:
   deploy:
