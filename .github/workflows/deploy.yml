@@ -14,14 +14,14 @@ jobs:
 
     steps:      
     - name: Checkout triggering repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         repository: ${{ github.event.client_payload.repository }}
         ref: ${{ github.event.client_payload.ref }}
         token: ${{ secrets.REPO_DISPATCH_TOKEN }}
 
     - name: Set up Python 3.11
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v2
       with:
         python-version: '3.11'
 
