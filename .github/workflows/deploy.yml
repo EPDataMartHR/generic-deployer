@@ -67,9 +67,12 @@ jobs:
     - name: Get the latest tag
       id: get_latest_tag
       run: |
-        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "none")
+        latest_tag=$(git tag --list 'dev-*' --sort=-v:refname | head -n 1)
+        if [ -z "$latest_tag" ]; then
+          latest_tag="none"
+        fi
         echo "latest_tag=$latest_tag" >> $GITHUB_ENV
-
+        
     - name: Calculate new tag
       id: calculate_tag
       run: |
