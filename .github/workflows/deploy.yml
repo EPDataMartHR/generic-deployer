@@ -68,7 +68,7 @@ jobs:
       id: get_latest_tag
       run: |
         latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || echo "none")
-        echo "::set-output name=latest_tag::$latest_tag"
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
 
     - name: Calculate new tag
       id: calculate_tag
@@ -83,7 +83,7 @@ jobs:
           next_seq=1
         fi
         new_tag="dev-$next_seq"
-        echo "::set-output name=new_tag::$new_tag"
+        echo "new_tag=$new_tag" >> $GITHUB_ENV
 
     - name: Create & Push new tag
       id: tag
