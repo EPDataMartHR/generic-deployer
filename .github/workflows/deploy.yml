@@ -64,6 +64,15 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+    - name: Fetch all tags
+      run: git fetch --tags
+
+    - name: Verify repository and tags
+      run: |
+        echo "Repository: $(git remote -v)"
+        echo "Current branch: $(git branch --show-current)"
+        echo "Tags: $(git tag -l 'dev-*' --sort=-v:refname)"
+  
     - name: Get the latest tag
       id: get_latest_tag
       run: |
