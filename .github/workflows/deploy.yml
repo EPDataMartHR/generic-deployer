@@ -58,3 +58,36 @@ jobs:
           --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
           --region "${{ secrets.AWS_REGION }}" \
           --tags "global:project=DL-HR" "global:bu=HR"
+  
+    - name: Set up Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Get the latest tag
+      id: get_latest_tag
+      run: |
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "::set-output name=latest_tag::$latest_tag"
+
+    - name: Calculate new tag
+      id: calculate_tag
+      run: |
+        latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
+        if [[ $latest_tag =~ ^dev-[0-9]+$ ]]; then
+          seq=$(echo $latest_tag | cut -d'-' -f2)
+          next_seq=$((seq+1))
+        else
+          next_seq=1
+        fi
+        new_tag="dev-$next_seq"
+        echo "::set-output name=new_tag::$new_tag"
+
+    - name: Create & Push new tag
+      id: tag
+      run: |
+        new_tag=${{ steps.calculate_tag.outputs.new_tag }}
+        git tag $new_tag
+        git push origin $new_tag
+        echo "New tag created: $new_tag"
+
