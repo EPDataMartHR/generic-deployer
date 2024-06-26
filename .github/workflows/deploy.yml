@@ -85,11 +85,10 @@ jobs:
     - name: Calculate new tag
       id: calculate_tag
       run: |
-        latest_tag=${{ steps.get_latest_tag.outputs.latest_tag }}
-        if [[ $latest_tag == "none" ]]; then
+        if [[ ${{ env.latest_tag }} == "none" ]]; then
           next_seq=1
-        elif [[ $latest_tag =~ ^dev-[0-9]+$ ]]; then
-          seq=$(echo $latest_tag | cut -d'-' -f2)
+        elif [[ ${{ env.latest_tag }} =~ ^dev-[0-9]+$ ]]; then
+          seq=$(echo ${{ env.latest_tag }} | cut -d'-' -f2)
           next_seq=$((seq+1))
         else
           next_seq=1
@@ -100,8 +99,7 @@ jobs:
     - name: Create & Push new tag
       id: tag
       run: |
-        new_tag=${{ steps.calculate_tag.outputs.new_tag }}
-        git tag $new_tag
-        git push origin $new_tag
-        echo "New tag created: $new_tag"
+        git tag ${{ env.new_tag }}
+        git push origin ${{ env.new_tag }}
+        echo "New tag created: ${{ env.new_tag }}"
 
