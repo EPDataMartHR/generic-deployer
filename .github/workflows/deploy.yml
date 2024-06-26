@@ -71,12 +71,12 @@ jobs:
       run: |
         echo "Repository: $(git remote -v)"
         echo "Current branch: $(git branch --show-current)"
-        echo "Tags: $(git tag -l 'dev-*' --sort=-v:refname)"
+        echo "Tags: $(git tag -l '${{ github.event.client_payload.environment }}-*' --sort=-v:refname)"
   
     - name: Get the latest tag
       id: get_latest_tag
       run: |
-        latest_tag=$(git tag --list 'dev-*' --sort=-v:refname | head -n 1)
+        latest_tag=$(git tag --list '${{ github.event.client_payload.environment }}-*' --sort=-v:refname | head -n 1)
         if [ -z "$latest_tag" ]; then
           latest_tag="none"
         fi
@@ -87,13 +87,13 @@ jobs:
       run: |
         if [[ ${{ env.latest_tag }} == "none" ]]; then
           next_seq=1
-        elif [[ ${{ env.latest_tag }} =~ ^dev-[0-9]+$ ]]; then
+        elif [[ ${{ env.latest_tag }} =~ ^${{ github.event.client_payload.environment }}-[0-9]+$ ]]; then
           seq=$(echo ${{ env.latest_tag }} | cut -d'-' -f2)
           next_seq=$((seq+1))
         else
           next_seq=1
         fi
-        new_tag="dev-$next_seq"
+        new_tag="${{ github.event.client_payload.environment }}-$next_seq"
         echo "new_tag=$new_tag" >> $GITHUB_ENV
 
     - name: Create & Push new tag
