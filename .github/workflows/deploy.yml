@@ -32,7 +32,7 @@ jobs:
       if: ${{ github.event.client_payload.environment == 'pro' }}
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::590184102185:role/GithubActionsRole--arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE }} -- Sustituir por el nombre del Role
+        role-to-assume: arn:aws:iam::590184102185:role/GithubActionsRole
         role-session-name: GitHubActions-Production
         aws-region: ${{ secrets.AWS_REGION }}
     - name: Configure AWS credentials for development
