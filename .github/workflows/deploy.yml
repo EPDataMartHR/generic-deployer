@@ -43,7 +43,13 @@ jobs:
         role-session-name: GitHubActions-Development
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - name: Set environment variable
+      id: set_env
+      run: echo "ENVIRONMENT=${{ github.event.client_payload.environment }}" >> $GITHUB_ENV
+      
     - name: Run AWS SAM applications
+      env:
+        ENVIRONMENT: ${{ github.event.client_payload.environment }}
       run: |
         echo "Current directory: $(pwd)"
         # Build SAM application
@@ -58,6 +64,7 @@ jobs:
           --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
           --region "${{ secrets.AWS_REGION }}" \
           --tags "global:project=DL-HR" "global:bu=HR"
+          --parameter-overrides Environment=${{ env.ENVIRONMENT }}
   
     - name: Set up Git
       run: |
