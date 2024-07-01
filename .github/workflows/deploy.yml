@@ -64,7 +64,7 @@ jobs:
           --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
           --region "${{ secrets.AWS_REGION }}" \
           --tags "global:project=DL-HR" "global:bu=HR"
-          --parameter-overrides Environment=${{ env.ENVIRONMENT }}
+          --parameter-overrides Environment=$ENVIRONMENT
   
     - name: Set up Git
       run: |
